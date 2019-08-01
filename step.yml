@@ -1,12 +1,3 @@
-#
-# A couple of useful guides & docs:
-#
-# - Main Bitrise CLI docs: https://github.com/bitrise-io/bitrise/tree/master/_docs
-# - Step Development Guideline: https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
-# - Bitrise.yml format spec: https://github.com/bitrise-io/bitrise/blob/master/_docs/bitrise-yml-format-spec.md
-# - Bitrise docs: http://devcenter.bitrise.io/
-# - Bitrise CLI guides: http://devcenter.bitrise.io/bitrise-cli/
-
 title: |-
   Bitbucket Server Status
 summary: |
@@ -16,72 +7,89 @@ description: |
 website: https://github.com/arifken/bitrise-step-bitbucket-server-status
 source_code_url: https://github.com/arifken/bitrise-step-bitbucket-server-status
 support_url: https://github.com/arifken/bitrise-step-bitbucket-server-status/issues
-host_os_tags:
-  - osx-10.10
-  - ubuntu-16.04
-
-# If this step should be available only for certain project types
-# just uncomment this `project_type_tags` section and include all the
-# project types supported by the step. If the step can be used for all
-# project types then you can just remove this section.
-# If no `project_type_tags` specified (or specified as an empty array)
-# that means the step can be used for any project type.
-# You can find more information about project type tags in the Step Development Guideline:
-# https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
-#
-# project_type_tags:
-#   - ios
-#   - macos
-#   - android
-#   - xamarin
-#   - react-native
-#   - cordova
-#   - ionic
-
-# Type tags are used for categorizing steps, for easier step discovery in Step Libraries.
-# You can find more information about type tags in the Step Development Guideline:
-# https://github.com/bitrise-io/bitrise/blob/master/_docs/step-development-guideline.md
 type_tags:
   - utility
-
 is_requires_admin_user: true
 is_always_run: false
-is_skippable: false
-run_if: ""
-
-deps:
-  brew:
-  - name: git
-  - name: wget
-  apt_get:
-  - name: git
-  - name: wget
-
-
+is_skippable: true
+# run_if: .isCI
 toolkit:
   go:
     package_name: github.com/arifken/bitrise-step-bitbucket-server-status
-
-
 inputs:
-  - example_step_input: Default Value - you can leave this empty if you want to
+  - api_base_url: ""
     opts:
-      title: "Example Step Input"
-      summary: Summary. No more than 2-3 sentences.
-      description: |
-        Description of this input.
+      title: "Bitbucket Server API base url"
+      summary: ""
+      description: |-
+        API URL for Bitbucket Server
 
-        Can be Markdown formatted text.
-      is_expand: true
+        Example: "https://bitbucket.example.org/rest/"
       is_required: true
-      value_options: []
-
-outputs:
-  - EXAMPLE_STEP_OUTPUT:
+  - commit_hash: "$BITRISE_GIT_COMMIT"
     opts:
-      title: "Example Step Output"
-      summary: Summary. No more than 2-3 sentences.
-      description: |
-        Description of this output.
+      title: "Commit hash"
+      summary: ""
+      description: |-
+        The commit hash for which we want to update the build status.
+      is_required: true
+  - status: "auto"
+    opts:
+      title: "Status"
+      summary: "The build status for this commit."
+      description: |-
+        The build status to assign to this commit. `auto` will use the current build status 
+        defined in BITRISE_BUILD_STATUS.  
+      value_options:
+      - "auto"
+      - "in_progress"
+      - "successful"
+      - "failed"
+  - key: "bitrise"
+    opts:
+      title: "Key"
+      summary: "The identifier to separate this from other build statuses on the same commit"
+      description: |-
+        Each commit can have one or more build statuses associated with it. This key allows
+        you to specify which status should be updated by this step.
 
-        Can be Markdown formatted text.
+        For example, you might have multiple keys for 'lint', 'build', 'deploy', etc...
+      is_required: true
+  - name: "Bitrise build"
+    opts:
+      title: "Title"
+      summary: "The text that will be displayed in Bitbucket for this status"
+      description: |-
+        This is the text that appears as the title for a build status, directly above the 
+        description.
+      is_required: true
+  - description: "Building workflow $BITRISE_TRIGGERED_WORKFLOW_TITLE"
+    opts:
+      title: "Description"
+      summary: "The text that will be displayed in Bitbucket for this status"
+      description: |-
+        This is the block of text that appears below the title in the build status window.
+  - target_url: "$BITRISE_BUILD_URL"
+    opts:
+      title: "Target URL"
+      summary: ""
+      description: |-
+        The target URL to associate with this status. This is the URL that will open when
+        a user clicks the build status link.
+  - bitbucket_token: ""
+    opts:
+      title: "Bitbucket Personal Access Token"
+      summary: ""
+      is_required: true
+      is_sensitive: true
+      description: |-
+        The access token to authenticate Bitbucket Server API access. Instructions for generating 
+        a token can be found here: https://confluence.atlassian.com/bitbucketserver/personal-access-tokens-939515499.html
+  - bitbucket_user: ""
+    opts:
+      title: "Bitbucket Username"
+      summary: "The Bitbucket username that the token belongs to."
+      is_required: true
+      is_sensitive: true
+      description: |-
+        This is the username that owns the token defined above in bitbucket_token.

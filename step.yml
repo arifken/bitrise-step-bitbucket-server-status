@@ -45,7 +45,7 @@ inputs:
       - "in_progress"
       - "successful"
       - "failed"
-  - key: "bitrise"
+  - build_key: "bitrise"
     opts:
       title: "Key"
       summary: "The identifier to separate this from other build statuses on the same commit"
@@ -55,7 +55,7 @@ inputs:
 
         For example, you might have multiple keys for 'lint', 'build', 'deploy', etc...
       is_required: true
-  - name: "Bitrise build"
+  - build_name: "Bitrise build"
     opts:
       title: "Title"
       summary: "The text that will be displayed in Bitbucket for this status"
@@ -85,11 +85,3 @@ inputs:
       description: |-
         The access token to authenticate Bitbucket Server API access. Instructions for generating 
         a token can be found here: https://confluence.atlassian.com/bitbucketserver/personal-access-tokens-939515499.html
-  - bitbucket_user: ""
-    opts:
-      title: "Bitbucket Username"
-      summary: "The Bitbucket username that the token belongs to."
-      is_required: true
-      is_sensitive: true
-      description: |-
-        This is the username that owns the token defined above in bitbucket_token.

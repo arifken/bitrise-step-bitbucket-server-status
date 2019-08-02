@@ -12,7 +12,6 @@ type_tags:
 is_requires_admin_user: true
 is_always_run: false
 is_skippable: true
-# run_if: .isCI
 toolkit:
   go:
     package_name: github.com/arifken/bitrise-step-bitbucket-server-status
@@ -85,3 +84,14 @@ inputs:
       description: |-
         The access token to authenticate Bitbucket Server API access. Instructions for generating 
         a token can be found here: https://confluence.atlassian.com/bitbucketserver/personal-access-tokens-939515499.html
+  - ssl_verify: "yes"
+    opts:
+      title: Verify SSL when connecting to Bitbucket?
+      summary: |-
+        Verify SSL when connecting to Bitbucket?
+      description: |-
+        Some repository may expose internal hosts to bitrise.io through a proxy. Set this to "no" in 
+        order to bypass SSL verification when making the connection to Bitbucket.
+      value_options:
+      - "yes"
+      - "no"

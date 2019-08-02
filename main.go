@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -21,6 +22,7 @@ type config struct {
 	TargetURL   string `env:"target_url"`
 	BuildName   string `env:"build_name"`
 	Description string `env:"description"`
+	SSLVerify   string `env:"ssl_verify"`
 }
 
 func getState(status string) string {
@@ -82,7 +84,16 @@ func postStatus(cfg config) error {
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", cfg.PersonalAccessToken))
 
-	response, err := http.DefaultClient.Do(req)
+	client := http.DefaultClient
+	if cfg.SSLVerify == "no" {
+		tr := &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		}
+		client = &http.Client{Transport: tr}
+		log.Warnf("SSL verification is disabled for Bitbucket API call")
+	}
+
+	response, err := client.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to send the request: %s", err)
 	}

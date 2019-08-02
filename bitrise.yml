@@ -77,7 +77,17 @@ workflows:
         - build_name: "Test of Bitrise status step"
         - description: "Test update status from bitrise: in automatic (success)"
         - target_url: "https://www.bitrise.io/"
-
+  test_default_target_url:
+    steps:
+    - path::./:
+        title: "Test success status"
+        inputs:
+        - api_base_url: "$BITRISE_BITBUCKET_TEST_BASE_URL" # define in .bitrise.secrets.yml
+        - commit_hash: "$BITRISE_TEST_COMMIT" # define in .bitrise.secrets.yml
+        - bitbucket_token: "$BITRISE_BITBUCKET_TEST_TOKEN" # define in .bitrise.secrets.yml
+        - build_key: "BITRISE_TEST"
+        - build_name: "Test of Bitrise status step"
+        - description: "Test update status from bitrise: in automatic (success)"
   # ----------------------------------------------------------------
   # --- workflows to Share this step into a Step Library
   audit-this-step:

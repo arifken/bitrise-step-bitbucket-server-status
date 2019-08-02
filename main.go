@@ -47,6 +47,14 @@ func getName(cfg config) string {
 	return cfg.BuildName
 }
 
+func getTargetURL(cfg config) string {
+	if cfg.TargetURL == "" {
+		return os.Getenv("BITRISE_BUILD_URL")
+	}
+
+	return cfg.TargetURL
+}
+
 func getAPIURL(cfg config) string {
 	return fmt.Sprintf("%s/build-status/1.0/commits/%s", cfg.APIBaseURL, cfg.CommitHash)
 }
@@ -56,7 +64,7 @@ func postStatus(cfg config) error {
 		"state":       getState(cfg.Status),
 		"key":         cfg.BuildKey,
 		"name":        getName(cfg),
-		"url":         cfg.TargetURL,
+		"url":         getTargetURL(cfg),
 		"description": cfg.Description,
 	}
 

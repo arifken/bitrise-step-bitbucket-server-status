@@ -13,6 +13,7 @@ For more information on Bitbucket build statuses, please refer to the [documenta
 * `build_key`: This is the identifier for this status on the commit. Some examples of this might be `lint_code`, `compile`, `deploy_artifacts`. Running this step three times with those three keys would cause the commit/PR on Bitbucket to show "3 builds passed"
 * `build_name`: This is the human-readable title for the build on Bitbucket that shows up under the list of builds
 * `description`: The summary text that appears below the build name and link in the Bitbucket build list. 
+* `target_url`: The URL to navigate to when clicking on a build in Bitbucket. Defaults to the `BITRISE_BUILD_URL` environment variable.
 * `bitbucket_token`: This is the Personal Access Token that authenticates Bitrise to send REST API calls to Bitbucket. More information can be found here: https://confluence.atlassian.com/bitbucketserver/personal-access-tokens-939515499.html
 
 ### Outputs
